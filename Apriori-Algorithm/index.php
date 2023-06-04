@@ -32,10 +32,9 @@ function read_data($filename) {
 $data_item = read_data("dataApriori.txt");
 
 
-//Lấy từng phần tử mảng
-
-
 $minSupport = 2;
+
+//Lấy từng phần tử mảng, chuyển mảng đầu vào thành Deep array để xử lý
 
 $arr = [];
 for ($i = 0; $i < count($data_item); $i++){
@@ -46,6 +45,15 @@ for ($i = 0; $i < count($data_item); $i++){
     }
     array_push($arr, $ar);
 }
+// $arr = [
+//     ["iPhone", "Samsung", "Lenovo"],
+//     ["Nokia","iPhone","Samsung","LG","Lenovo"],
+//     ["Nokia", "Samsung"],
+//     ["iPhone", "Samsung", "Nokia"],
+//     ["Lenovo"],
+//     ["Samsung", "LG"],
+//     ["Samsung", "Lenovo"],
+// ]
 
 //frequency
 $frequency_item = frequencyItem($arr);
@@ -62,12 +70,12 @@ do {
     $elimination_item = eliminationItem($frequency_item, $minSupport);
 } while ($elimination_item == $frequency_item);
 
-//Đếm số lần item xuất hiện
+//Đếm số lần item xuất hiện 
 function frequencyItem($data){
     $arr = [];
     for ($i = 0; $i < count($data); $i++){
-        $jum = array_count_values($data[$i]);
-        foreach ($jum as $key => $val) {
+        $count = array_count_values($data[$i]);
+        foreach ($count as $key => $val) {
             if (array_key_exists($key, $arr)) {
                 $arr[$key] += 1;
             } else {
@@ -244,7 +252,7 @@ function frequencyPairItem($data_pair, $data){
                         $iteration = 2;
                         do {
                         ?>
-                            <b>Iteration <?php echo $iteration; ?> (Calculating the initial frequency of itemsets:)</b>
+                            <b>Iteration <?php echo $iteration; ?> (Calculating the initial frequency of itemsets):</b>
                             <div class="table-responsive">
                                 <table class="table table-bordered">>
                                     <thead>
@@ -256,8 +264,8 @@ function frequencyPairItem($data_pair, $data){
                                     <tbody>
                                         <?php
                                         $pair_item = pairItem($elimination_item);
-                                        $frequency_item = frequencyPairItem($pair_item, $arr);
-                                        foreach($frequency_item as $key => $val) {
+                                        $frequency_pair_item = frequencyPairItem($pair_item, $arr);
+                                        foreach($frequency_pair_item as $key => $val) {
                                             $ex = explode("_", $key);
                                             $item = "";
                                             $v = "";
@@ -293,8 +301,8 @@ function frequencyPairItem($data_pair, $data){
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $elimination_item = eliminationItem($frequency_item, $minSupport);
-                                    foreach($elimination_item as $k => $v) {
+                                    $elimination_pair_item = eliminationItem($frequency_pair_item, $minSupport);
+                                    foreach($elimination_pair_item as $k => $v) {
                                     ?>
                                         <tr>
                                             <td><?= $k ?></td>
@@ -308,40 +316,49 @@ function frequencyPairItem($data_pair, $data){
                         </div>
                         <?php
                             $iteration++;
-                        } while ($elimination_item == $frequency_item);
+                        } while ($elimination_pair_item == $frequency_pair_item);
                         ?>
                         <b>Since there are no more frequencies to be eliminated, the iteration is stopped.</b><br>
                         <b>Calculate support and confidence:</b><br>
                         <?php
                         for ($i = 0; $i < count($association_rules); $i++) {
                             $x = 0;
-                            echo $i + 1 . "Confident value, ";
+                            echo $i + 1 . " Confident value, ";
                             echo $association_rules[$i]['item']."=>". $association_rules[$i]['val'] . "=";
                             $ex = explode(",", $association_rules[$i]['item']);
                             for ($l = 0; $l < count($arr); $l++) {
-                                $jum = 0;
+                                $count = 0;
                                 for ($k = 0; $k < count($ex); $k++) {
                                     for ($j = 0; $j <count($arr[$l]); $j++) {
                                         if ($arr[$l][$j] == $ex[$k]) {
-                                            $jum += 1;
+                                            $count += 1;
                                         }
                                     }
                                 }
-                                if (count($ex) == $jum) {
+                                if (count($ex) == $count) {
                                     $x += 1;
                                 }
                             }
+                            // Define minConfident = 40%
+                            $minConfident = 40;
                             $confident = (floatval($association_rules[$i]["sc"])/floatval($x)) * 100;
+                            // Gán key c = confident
                             $association_rules[$i]["c"] = number_format($confident, 2, ".", ";");
-                            echo $association_rules[$i]["sc"] . "/" . $x . "=" . number_format(floatval($association_rules[$i]["sc"]) / floatval($x), 2, ".", ";") . "=" . number_format($confident, 0, ".", ";") . "%";
+                            echo $association_rules[$i]["sc"] . "/" . $x . "=" . number_format(floatval($association_rules[$i]["sc"])
+                             / floatval($x), 2, ".", ";") . "=" . number_format($confident, 0, ".", ";") . "%";
+                            if ($confident < $minConfident){
+                                echo " => Reject";
+                            }
                             echo "<br>";
                         }
                         ?>
                         <b>Based on the Apriori algorithm, the obtained association rules are as follows:</b><br>
                         <?php
                         for ($i = 0; $i < count($association_rules); $i++) {
-                            $x = 0;
-                            echo $i + 1 . ". if " . $association_rules[$i]['item'] . " so " . $association_rules[$i]['val'] . "<br>";
+                            if ($association_rules[$i]["c"] >= $minConfident){
+                                echo $i + 1 . ". if " . $association_rules[$i]['item'] . " so " 
+                                . $association_rules[$i]['val'] . "<br>";
+                            }
                         }
                         ?>
                     </div>

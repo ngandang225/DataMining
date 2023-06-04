@@ -10,7 +10,7 @@ class NaiveBayes{
 	}
 	
 	public function train($samples, $labels){
-		// All multidimension samples must have the same size
+		// All multidimensional array samples must have the same size
 		$size = -1;
 		foreach($samples as $S){
 			if(count($S) != $size && $size != -1){
@@ -26,7 +26,7 @@ class NaiveBayes{
 			return null;
 		}
 		
-		// labels should not be multidimension
+		// labels should not be multidimensional array
 		if (count($labels) != count($labels, COUNT_RECURSIVE)){
 			echo "Error : labels should not be multidimensional <br>";
 			return null;
@@ -47,77 +47,47 @@ class NaiveBayes{
 			echo $key . ": " . $value . " ";
 		}
 		echo "<br><br>";
-
-		//Sum of each value of labels
 		
 		$sampleSampleProb = array();
 		$lenSamples = count($this->samples);
-		// If samples are multidimension
-		if (count($this->samples) != count($this->samples, COUNT_RECURSIVE)){
-			// Calculate the probabilities of samples
-			$this->lenSampleSub = count($this->samples[0]);
-			for($col=0; $col<$this->lenSampleSub; $col++){
-				for($row=0; $row<$lenSamples; $row++){
-					$samplesProb = $col + 1 . "_" . $this->samples[$row][$col];
-					if(!isset($this->$samplesProb)){
-						$this->$samplesProb = array_fill_keys(array_keys($this->labelsSum), 0);
-						array_push($sampleSampleProb, $samplesProb);
-					}
-					$this->$samplesProb[$this->labels[$row]]++;
-				}
-			}
-			
-			foreach($sampleSampleProb as $samplesProb){
-				echo "Column ". $samplesProb . "&emsp;";
-				// print_r($this->$samplesProb);
-				foreach ($this->$samplesProb as $key => $value) {
-					echo $key . ": " . $value . " ";
-				}
-				echo "<br>";
-
-				foreach($this->$samplesProb as $key => $value){
-					$this->$samplesProb[$key] /= $this->labelsSum[$key];
-				}
-				
-				// print_r($this->$samplesProb);
-				echo "Probability: ";
-				foreach ($this->$samplesProb as $key => $value) {
-					echo $key . ": " . $value . "   ";
-				}
-				echo "<br><br>";
-			}
-		}
-		// If SAMPLES are single array
-		else{
-			$this->lenSampleSub = count($this->samples);
-			for($i=0; $i<$this->lenSampleSub; $i++){
-				$samplesProb = $this->samples[$i];
+		// Calculate the probabilities of samples
+		$this->lenSampleSub = count($this->samples[0]);
+		for($col=0; $col<$this->lenSampleSub; $col++){
+			for($row=0; $row<$lenSamples; $row++){
+				$samplesProb = $col + 1 . "_" . $this->samples[$row][$col];
 				if(!isset($this->$samplesProb)){
 					$this->$samplesProb = array_fill_keys(array_keys($this->labelsSum), 0);
 					array_push($sampleSampleProb, $samplesProb);
 				}
-				$this->$samplesProb[$this->labels[$i]]++;
+				$this->$samplesProb[$this->labels[$row]]++;
+			}
+		}
+		
+		foreach($sampleSampleProb as $samplesProb){
+			echo "Column ". $samplesProb . "&emsp;";
+			// print_r($this->$samplesProb);
+			foreach ($this->$samplesProb as $key => $value) {
+				echo $key . ": " . $value . " ";
+			}
+			echo "<br>";
+
+			foreach($this->$samplesProb as $key => $value){
+				$this->$samplesProb[$key] /= $this->labelsSum[$key];
 			}
 			
-			foreach($sampleSampleProb as $samplesProb){
-				echo $samplesProb . "&emsp;";
-				//print_r($this->$samplesProb);
-				echo $this->$samplesProb;
-
-				foreach($this->$samplesProb as $key => $value){
-					$this->$samplesProb[$key] /= $this->labelsSum[$key];
-				}
-				
-				print_r($this->$samplesProb);
-				echo "<br>";
+			// print_r($this->$samplesProb);
+			echo "Probability: ";
+			foreach ($this->$samplesProb as $key => $value) {
+				echo $key . ": " . $value . "   ";
 			}
+			echo "<br><br>";
 		}
 	}
 	
 	public function predict($input){
-		// input should not be multidimension
+		// input should not be multidimensional array
 		if (count($input) != count($input, COUNT_RECURSIVE)){
-			echo "Error : input should not be multidimensional <br>";
+			echo "Error : input should not be multidimensional array <br>";
 			return null;
 		}
 		
