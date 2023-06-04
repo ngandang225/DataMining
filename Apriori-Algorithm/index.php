@@ -1,13 +1,4 @@
 <?php
-// $data_item = [
-//     ["id"=>1, "item"=>"Sabun,Sampo"],
-//     ["id"=>2, "item"=>"Handuk,Bedak,Sampo,Sabun"],
-//     ["id"=>3, "item"=>"Sabun,Handuk,Sampo,Sikat Gigi"],
-//     ["id"=>4, "item"=>"Sampo,Sabun,Bedak,Handuk"],
-//     ["id"=>5, "item"=>"Sabun,Pasta Gigi,Sampo"],
-//     ["id"=>6, "item"=>"Sabun,Handuk,Sikat Gigi"],
-//     ["id"=>7, "item"=>"Sampo,Sikat Gigi"]
-// ];
 
 // $data_item = [
 //     ["id"=>1, "item"=>"iPhone;Samsung;Lenovo"],
@@ -98,7 +89,7 @@ function eliminationItem($data, $min) {
     return $arr;
 }
 
-//
+//Ghép cặp item
 function pairItem($data){
     $n = 0;
     $arr = [];
@@ -119,7 +110,7 @@ function pairItem($data){
     }
     return $arr;
 }
-
+//Số lần xuất hiện của cặp item
 function frequencyPairItem($data_pair, $data){
     $arr = $data_pair;
     foreach ($data_pair as $key => $k) {
@@ -290,7 +281,7 @@ function frequencyPairItem($data_pair, $data){
                                 </table>
                             </div>
                             <span>
-                            Iterative elimination <?php echo $iteration; ?> (Membuang item yang tidak memenuhi nilai minimum suppor) So that it becomes:
+                            Iterative elimination <?php echo $iteration; ?> (Discard items that do not meet the minimum support value) So that it becomes:
                             </span>
                             <div class="table-responsive">
                             <table class="table table-bordered">>

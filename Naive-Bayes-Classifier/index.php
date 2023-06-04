@@ -69,5 +69,5 @@ $NB = new NaiveBayes ();
 $NB->train($SAMPLES, $LABELS);
 $PREDICTED = $NB->predict($TEST);
 echo "<br>";
-echo $PREDICTED;
+echo "Result: " . $PREDICTED;
 ?>

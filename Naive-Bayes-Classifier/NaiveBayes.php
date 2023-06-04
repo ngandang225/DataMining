@@ -42,6 +42,13 @@ class NaiveBayes{
 			}
 			$this->labelsSum[$L]++;
 		}
+		echo "Sum of labels is " . count($labels) . ": ";
+		foreach ($this->labelsSum as $key => $value) {
+			echo $key . ": " . $value . " ";
+		}
+		echo "<br><br>";
+
+		//Sum of each value of labels
 		
 		$sampleSampleProb = array();
 		$lenSamples = count($this->samples);
@@ -51,7 +58,7 @@ class NaiveBayes{
 			$this->lenSampleSub = count($this->samples[0]);
 			for($col=0; $col<$this->lenSampleSub; $col++){
 				for($row=0; $row<$lenSamples; $row++){
-					$samplesProb = $col . "_" . $this->samples[$row][$col];
+					$samplesProb = $col + 1 . "_" . $this->samples[$row][$col];
 					if(!isset($this->$samplesProb)){
 						$this->$samplesProb = array_fill_keys(array_keys($this->labelsSum), 0);
 						array_push($sampleSampleProb, $samplesProb);
@@ -61,15 +68,23 @@ class NaiveBayes{
 			}
 			
 			foreach($sampleSampleProb as $samplesProb){
-				echo $samplesProb . "&emsp;";
-				print_r($this->$samplesProb);
-				
+				echo "Column ". $samplesProb . "&emsp;";
+				// print_r($this->$samplesProb);
+				foreach ($this->$samplesProb as $key => $value) {
+					echo $key . ": " . $value . " ";
+				}
+				echo "<br>";
+
 				foreach($this->$samplesProb as $key => $value){
 					$this->$samplesProb[$key] /= $this->labelsSum[$key];
 				}
 				
-				print_r($this->$samplesProb);
-				echo "<br>";
+				// print_r($this->$samplesProb);
+				echo "Probability: ";
+				foreach ($this->$samplesProb as $key => $value) {
+					echo $key . ": " . $value . "   ";
+				}
+				echo "<br><br>";
 			}
 		}
 		// If SAMPLES are single array
@@ -86,8 +101,9 @@ class NaiveBayes{
 			
 			foreach($sampleSampleProb as $samplesProb){
 				echo $samplesProb . "&emsp;";
-				print_r($this->$samplesProb);
-				
+				//print_r($this->$samplesProb);
+				echo $this->$samplesProb;
+
 				foreach($this->$samplesProb as $key => $value){
 					$this->$samplesProb[$key] /= $this->labelsSum[$key];
 				}
@@ -134,8 +150,14 @@ class NaiveBayes{
 			$probList[$key] = $prob;
 		}
 		$highestProb = array_search(max($probList), $probList);
-		print_r($probList);
+		// print_r($probList);
+		echo "<br>";
+		echo "Probability: ";
+		foreach ($probList as $key => $value) {
+			echo $key . ": " . $value . "   ";
+		}
 		return $highestProb;
 	}
 }
 ?>
+
