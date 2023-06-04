@@ -52,7 +52,7 @@ function read_test_file($filename) {
 // 			, ['Overcast', 'Hot', 'Normal', 'Weak'], ['Rain', 'Mild', 'High', 'Strong']];
 // $LABELS = ['No', 'No', 'Yes', 'Yes', 'Yes', 'No', 'Yes', 'No', 'Yes', 'Yes', 'Yes', 'Yes', 'Yes', 'No'];
 
-$filename = "data.txt";
+$filename = "dataBayes.txt";
 
 // Gọi hàm để đọc dữ liệu từ file và chuyển đổi thành mảng
 $data = read_data_file($filename);
@@ -61,7 +61,7 @@ $data = read_data_file($filename);
 $SAMPLES = $data[0];
 $LABELS = $data[1];
 
-$testfile = "test.txt";
+$testfile = "testBayes.txt";
 $data_test = read_test_file($testfile);
 $TEST = $data_test;
 

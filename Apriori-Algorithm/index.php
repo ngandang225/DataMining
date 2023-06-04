@@ -29,7 +29,7 @@ function read_data($filename) {
     return $data_item;
 }
 
-$data_item = read_data("data.txt");
+$data_item = read_data("dataApriori.txt");
 
 
 //Lấy từng phần tử mảng
